@@ -18,6 +18,7 @@ import mongoose from 'mongoose'
 import Users from './models/user'
 import connection from '../.mongodb.json'
 
+//Mock data
 var data = [
   {
     name: "John",
@@ -49,14 +50,14 @@ export default function (context) {
     //Need to remove the emmiters, this should be done only once
     db.once('open', function() {
         //
-        console.log(`${module.id} We are connected!`)
+        /*console.log(`${module.id} We are connected!`)
         Users.insertMany(data, (err, result) => {
             if (err) {
                 console.error(err);
             } else {
-                console.log(`${module.id}: ${result.length} user(s) inserted successfully`)
+                console.log(`${module.id}: ${result.length} user(s) inserted successfully`) 
             }
-        });
+        });*/
     });
 }
 

@@ -51,7 +51,8 @@ export default {
   },
 
   serverMiddleware: [
-      '~/serverMiddleware/api'
+    '~/serverMiddleware/body',
+    '~/serverMiddleware/api'
   ],
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify

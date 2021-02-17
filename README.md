@@ -21,8 +21,10 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 
 Version History:
 ================
+* v.0.1.3:
+  - API continuation of tests, create list, find by name and by id (user)
 * v.0.1.2:
-  - First test with server Middleware - api testing
+  - First test with server Middleware - api testing. Tested some more 3rd party components
 * v.0.1.1:
   - First test with MongoDB middleware
 * v.0.1.0:
