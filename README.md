@@ -21,5 +21,7 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 
 Version History:
 ================
+* v.0.1.1:
+  - First test with MongoDB middleware
 * v.0.1.0:
   - First version. Playing around. Added a couple of test middleware. Trying out external 3rd party components.

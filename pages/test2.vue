@@ -12,6 +12,7 @@ export default {
   components: {
     DashboardView,
     UserProfile
-  }
+  },
+  middleware: 'mongoose' //Does not run individually per page?
 }
 </script>
