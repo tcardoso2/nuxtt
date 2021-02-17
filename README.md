@@ -21,6 +21,8 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 
 Version History:
 ================
+* v.0.1.2:
+  - First test with server Middleware - api testing
 * v.0.1.1:
   - First test with MongoDB middleware
 * v.0.1.0:
