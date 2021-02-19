@@ -91,3 +91,6 @@ sw.*
 
 # MongoDB
 .mongodb.json
+
+# Custom sub-folders (Customizations tracked separately in other repos)
+.custom
