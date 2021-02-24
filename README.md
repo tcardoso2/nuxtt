@@ -30,6 +30,7 @@ Issues:
 
 Version History:
 ================
+* v.0.1.5:
 * v.0.1.4:
   - Some customizations for custom sass, for better integration with custom sites
 * v.0.1.3:

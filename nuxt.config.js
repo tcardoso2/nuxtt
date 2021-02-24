@@ -17,7 +17,7 @@ export default {
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: '' }
     ],
-    link: [
+    /*link: [
       { 
         rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' 
       },
@@ -26,7 +26,7 @@ export default {
         href: "/styles/bootstrap.min.css"
       },
 
-    ],
+    ],*/
     script: [
       {
         src: "https://code.jquery.com/jquery-3.4.1.slim.min.js",
@@ -52,7 +52,9 @@ export default {
   // Global CSS: https://go.nuxtjs.dev/config-css
   //TODO: Can't seem to add this on a component level?
   css: [
-    //'bootstrap',
+    //'bootstrap', 
+    '@/styles/bootstrap.min.css',
+    '@/styles/custom.styles/Webkrafts.css',
     '~/assets/custom.assets/_shift_default.css'
     //,'@/assets/custom.assets/scss/custom.scss' //Enable custom scss files here!
   ],
