@@ -93,4 +93,8 @@ sw.*
 .mongodb.json
 
 # Custom sub-folders (Customizations tracked separately in other repos)
-.custom
+custom.pages
+custom.layouts
+custom.assets
+custom.styles
+custom.components

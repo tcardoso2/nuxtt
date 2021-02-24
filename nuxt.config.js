@@ -1,3 +1,5 @@
+//import webpack from 'webpack'
+
 import colors from 'vuetify/es5/util/colors'
 
 process.env.DEBUG = 'nuxt:*' //Comment to disable debuging logs
@@ -16,20 +18,45 @@ export default {
       { hid: 'description', name: 'description', content: '' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      { 
+        rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' 
+      },
+      {
+        rel: "stylesheet",
+        href: "/styles/bootstrap.min.css"
+      },
+
+    ],
+    script: [
+      {
+        src: "https://code.jquery.com/jquery-3.4.1.slim.min.js",
+        type: "text/javascript"
+      },
+      {
+        src: "https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js",
+        type: "text/javascript"
+      }, {
+        src: "https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js",
+        type: "text/javascript"
+      }
     ]
   },
 
-  // Global CSS: https://go.nuxtjs.dev/config-css
-  css: [
-  ],
-
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    //{ src: '@/plugins/bootstrap' },
     { src: '@/plugins/chartist' },
     { src: '@/plugins/webfontloader', mode: 'client' } //Loaded client only
   ],
 
+  // Global CSS: https://go.nuxtjs.dev/config-css
+  //TODO: Can't seem to add this on a component level?
+  css: [
+    //'bootstrap',
+    '~/assets/custom.assets/_shift_default.css'
+    //,'@/assets/custom.assets/scss/custom.scss' //Enable custom scss files here!
+  ],
+  
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
 
@@ -39,9 +66,27 @@ export default {
     '@nuxtjs/vuetify',
   ],
 
+  //Custom
+  module: {
+    rules: [
+      {
+        test: /\.s[ac]ss$/i,
+        use: ['style-loader','css-loader','sass-loader',],
+      }  
+    ],
+  },
+
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
+    //Custom
+    'bootstrap-vue/nuxt'
   ],
+  
+  //Custom
+  bootstrapVue: {
+    bootstrapCSS: false, 
+    bootstrapVueCSS: false
+  },
 
   // Middleware: https://nuxtjs.org/docs/2.x/directory-structure/middleware
   router: {
@@ -73,8 +118,15 @@ export default {
       }
     }
   },
-
+  //Could not add jquery as plugin, see it's added to page header instead
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+    /*plugins: [
+      new webpack.ProvidePlugin({
+        // global modules
+        $j: 'jquery',
+        _: 'lodash'
+      })
+    ]*/
   }
 }

@@ -19,8 +19,19 @@ $ npm run generate
 
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
 
+Customizations:
+===============
+- sass-loader
+
+Issues:
+=======
+- The node module custom dependency "sass-loader", version 11.0.1 does not work with the current vue's version.
+  - remedy: https://stackoverflow.com/questions/66082397/typeerror-this-getoptions-is-not-a-function install/downgrade to version 10.1.1
+
 Version History:
 ================
+* v.0.1.4:
+  - Some customizations for custom sass, for better integration with custom sites
 * v.0.1.3:
   - API continuation of tests, create list, find by name and by id (user)
 * v.0.1.2:
