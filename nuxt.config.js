@@ -81,8 +81,52 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     //Custom
-    'bootstrap-vue/nuxt'
+    'bootstrap-vue/nuxt',
+    '@nuxtjs/axios',
+    '@nuxtjs/auth-next',
+    '~/io'
   ],
+
+  env: {
+    WS_URL: process.env.WS_URL || 'http://localhost:3000'
+  },
+  
+  /*auth: {
+    // Options
+    // Google: see https://auth.nuxtjs.org/providers/google
+    strategies: {
+      social: {
+        scheme: 'oauth2',
+        endpoints: {
+          authorization: 'https://accounts.google.com/o/oauth2/auth',
+          token: undefined,
+          userInfo: 'https://www.googleapis.com/oauth2/v3/userinfo',
+          logout: 'https://example.com/logout'
+        },
+        token: {
+          property: 'access_token',
+          type: 'Bearer',
+          maxAge: 1800
+        },
+        refreshToken: {
+          property: 'refresh_token',
+          maxAge: 60 * 60 * 24 * 30
+        },
+        responseType: 'token',
+        grantType: 'authorization_code',
+        accessType: undefined,
+        redirectUri: undefined,
+        logoutRedirectUri: undefined,
+        clientId: '592050063363-5765j495f9i5q061oq4q2crc3i9pg0j8.apps.googleusercontent.com',
+        scope: ['openid', 'profile', 'email'],
+        state: 'UNIQUE_AND_NON_GUESSABLE',
+        codeChallengeMethod: '',
+        responseMode: '',
+        acrValues: '',
+        // autoLogout: false
+      }
+    }
+  },*/
   
   //Custom
   bootstrapVue: {
@@ -93,7 +137,7 @@ export default {
   // Middleware: https://nuxtjs.org/docs/2.x/directory-structure/middleware
   router: {
     middleware: [
-      'example'
+      //'auth'
     ]
   },
 
@@ -106,7 +150,7 @@ export default {
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     theme: {
-      dark: true,
+      dark: false,
       themes: {
         dark: {
           primary: colors.blue.darken2,

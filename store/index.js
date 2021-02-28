@@ -1,28 +1,17 @@
-// Vue
-import Vue from 'vue'
-import Vuex from 'vuex'
-import pathify from 'vuex-pathify'
-
-// Modules
-import * as modules from './modules'
-
-Vue.use(Vuex)
-
-const store = new Vuex.Store({
-  modules,
-  plugins: [
-    pathify.plugin,
-  ],
+export const state = () => ({
+  chatMessages: '',
+  titleFromUser: ''
 })
 
-store.subscribe(mutation => {
-  if (!mutation.type.startsWith('user/')) return
+export const mutations = {
+  SET_MESSAGE(state, chatMessage) {
+    state.chatMessages += chatMessage
+  }
+}
 
-  store.dispatch('user/update', mutation)
-})
-
-store.dispatch('app/init')
-
-export default () => store
-
-export const ROOT_DISPATCH = Object.freeze({ root: true })
+export const actions = {
+  FORMAT_MESSAGE({ commit }, chatMessage) {
+    const chatMessageFmt = `${new Date().toLocaleString()}: ${chatMessage}\r\n`
+    commit('SET_MESSAGE', chatMessageFmt)
+  }
+}
