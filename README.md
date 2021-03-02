@@ -33,7 +33,8 @@ Version History:
 * v.0.1.5:
   - Added github Hello World Workflow (WIP)
   - Added Authentication module - components not requiring must specify "auth:false"
-  - Added Socket.io (experimental)
+  - Added Socket.io (experimental),
+    - some memory persistence to be able to remember game states between pages;
 * v.0.1.4:
   - Some customizations for custom sass, for better integration with custom sites
 * v.0.1.3:
