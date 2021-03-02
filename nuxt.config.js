@@ -85,6 +85,7 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/auth-next',
     '~/io'
+    //,'~/data'
   ],
 
   env: {
