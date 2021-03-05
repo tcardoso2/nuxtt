@@ -8,7 +8,12 @@ export default function () {
   this.persistMsgs = {}
   this.nuxt.hook('render:before', (renderer) => {
     const server = http.createServer(this.nuxt.renderer.app)
-    const io = socketIO(server)
+    const io = socketIO(server, {
+      cors: {
+        origin: "https://expressive.ap.ngrok.io",
+        methods: ["GET", "POST"]
+      }
+    })
     console.log(">> Socket.io:: Setting up socket.io server...")
     
     //TODO: Persist on disk as well, besides memory?
@@ -31,18 +36,22 @@ export default function () {
     const messages = [] //Do I need storage persistance if this already exists?
     let that = this;
     io.on('connection', async (socket) => {
+      
       console.log(`>> Socket.io:: In-mem session Persistent storage has ${Object.keys(that.persistMsgs).length} item(s)`)
       //console.log(await storage.getItem('default_ready'));
       console.log(">> Socket.io:: Received new connection");
+      
       socket.on('last-messages', function (fn) {
         console.log(">> Socket.io:: Received 'last-messages'")
         fn(messages.slice(-50))
       })
+      
       socket.on('last-status', function (fn) {
-        console.log(`>> Socket.io:: Received 'last-status', will respond with ${JSON.stringify(that.persistMsgs["game-status"])}`)
+        console.log(`>> Socket.io:: Received 'last-status', will respond with ${JSON.stringify(that.persistMsgs)}`)
         //socket.broadcast.emit('update-status', that.persistMsgs["game-status"]) // Will always be null?
-        fn(that.persistMsgs["game-status"])
+        fn(that.persistMsgs)
       })
+      
       socket.on('message-facilitator', async function (message, persist) {
         console.log(`>> Socket.io:: Received 'message-facilitator' = ${JSON.stringify(message)}`)
         messages.push(message)
@@ -55,6 +64,7 @@ export default function () {
         console.log(`>> Socket.io:: In-mem session Persistent storage has ${Object.keys(that.persistMsgs).length} item(s)`)
         console.log(`>> Socket.io:: Emited message to all facilitator listeners`)
       })
+      
       socket.on('message-players', async function (message, persist) {
         console.log(`>> Socket.io:: Received 'message-players' = ${JSON.stringify(message)}`)
         messages.push(message)
@@ -68,6 +78,7 @@ export default function () {
         console.log(`>> Socket.io:: In-mem session Persistent storage has ${Object.keys(that.persistMsgs).length} item(s)`)
         console.log(`>> Socket.io:: Emited message to all player listeners`)
       })
+      
       //console.log(`>> Socket.io:: Sending last known game-status (${that.persistMsgs["game-status"]})`)
       //socket.broadcast.emit('update-status', that.persistMsgs["game-status"]) // Will always be null?
     })
