@@ -22,4 +22,7 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 
 History:
 ========
-v0.1.6: Revamped app, added "expressinit.js" to start as express server with Nuxt middleware;
+- v 0.1.7: Testing with custom app - starting to bring over middleware and serverMiddleware modules;
+  - included mongoose as depedendency
+  - included plugins from master and cleaned up configuration a bit
+- v 0.1.6: Revamped app, added "expressinit.js" to start as express server with Nuxt middleware;
