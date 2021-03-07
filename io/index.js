@@ -39,21 +39,27 @@ export default function () {
       
       console.log(`>> Socket.io:: In-mem session Persistent storage has ${Object.keys(that.persistMsgs).length} item(s)`)
       //console.log(await storage.getItem('default_ready'));
-      console.log(">> Socket.io:: Received new connection");
+      let referer = socket.handshake.headers.referer
+      console.log(`>> Socket.io:: [${referer}]\n
+            Received new connection`)
+      console.log();
       
       socket.on('last-messages', function (fn) {
-        console.log(">> Socket.io:: Received 'last-messages'")
+        console.log(`>> Socket.io:: [${referer}]\n
+            Received 'last-messages'`)
         fn(messages.slice(-50))
       })
       
       socket.on('last-status', function (fn) {
-        console.log(`>> Socket.io:: Received 'last-status', will respond with ${JSON.stringify(that.persistMsgs)}`)
+        console.log(`>> Socket.io:: [${referer}]\n
+            Received 'last-status', will respond with ${JSON.stringify(that.persistMsgs)}`)
         //socket.broadcast.emit('update-status', that.persistMsgs["game-status"]) // Will always be null?
         fn(that.persistMsgs)
       })
       
       socket.on('message-facilitator', async function (message, persist) {
-        console.log(`>> Socket.io:: Received 'message-facilitator' = ${JSON.stringify(message)}`)
+        console.log(`>> Socket.io:: [${referer}]\n
+            Received 'message-facilitator' = ${JSON.stringify(message)}`)
         messages.push(message)
         socket.broadcast.emit('message-facilitator', message)
         if(message.persist) {
@@ -66,7 +72,8 @@ export default function () {
       })
       
       socket.on('message-players', async function (message, persist) {
-        console.log(`>> Socket.io:: Received 'message-players' = ${JSON.stringify(message)}`)
+        console.log(`>> Socket.io:: [${referer}]\n
+            Received 'message-players' = ${JSON.stringify(message)}`)
         messages.push(message)
         socket.broadcast.emit('message-players', message)
         if(message.persist) {
