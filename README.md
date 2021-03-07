@@ -18,3 +18,8 @@ $ npm run generate
 ```
 
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
+
+
+History:
+========
+v0.1.6: Revamped app, added "expressinit.js" to start as express server with Nuxt middleware;
