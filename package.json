@@ -13,9 +13,11 @@
     "core-js": "^3.8.3",
     "express": "^4.17.1",
     "mongoose": "^5.11.19",
+    "node-persist": "^3.1.0",
     "nuxt": "^2.14.12",
     "socket.io": "^3.1.2",
     "socket.io-client": "^3.1.2",
+    "vue-chartist": "^2.3.1",
     "webfontloader": "^1.6.28"
   },
   "devDependencies": {

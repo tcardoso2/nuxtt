@@ -6,7 +6,7 @@ process.env.DEBUG = 'nuxt:*' //Comment to disable debuging logs
 
 export default {
   //https://nuxtjs.org/blog/nuxt-static-improvements/
-  target: 'static',
+  //target: 'static',
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: '%s - testApp1',
@@ -20,8 +20,8 @@ export default {
       { hid: 'description', name: 'description', content: '' }
     ],
     /*link: [
-      { 
-        rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' 
+      {
+        rel: 'icon', type: 'image/x-icon', href: '/favicon.ico'
       },
       {
         rel: "stylesheet",
@@ -128,10 +128,10 @@ export default {
       }
     }
   },*/
-  
+
   //Custom
   bootstrapVue: {
-    bootstrapCSS: false, 
+    bootstrapCSS: false,
     bootstrapVueCSS: false
   },
 
