@@ -57,6 +57,13 @@ export default function () {
         fn(that.persistMsgs)
       })
       
+      socket.on('reset-game', async function () {
+        //Removes all messaes except the game-status
+        let _gs = that.persistMsgs['game-status']
+        that.persistMsgs = {}
+        if(_gs) that.persistMsgs['game-status'] = _gs
+      })
+
       socket.on('message-facilitator', async function (message, persist) {
         console.log(`>> Socket.io:: [${referer}]\n
             Received 'message-facilitator' = ${JSON.stringify(message)}`)

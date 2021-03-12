@@ -84,9 +84,16 @@ export default {
     //'bootstrap-vue/nuxt',
     //'@nuxtjs/axios',
     //'@nuxtjs/auth-next',
-    '~/io'
+    '~/io',
+    'nuxt-basic-auth-module'
     //,'~/data'
   ],
+
+  basic: {
+    name: process.env.BASIC_NAME || '5_userS$',
+    pass: process.env.BASIC_PASS || 'pa##4RD!',
+    enabled: process.env.BASIC_ENABLED === 'true' // require boolean value(nullable)
+  },
 
   env: {
     WS_URL: process.env.WS_URL || 'http://localhost:3000'
