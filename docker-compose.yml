@@ -1,0 +1,17 @@
+version: '3'
+services:
+  expressive:
+    container_name: expressive
+    image: expressive
+    #restart: always
+    environment:
+     - TEST_ABCD=false
+    ports:
+      - "8002:8001"
+      - "3002:3000"
+    entrypoint: /bin/sh -c "/bin/sh -c \"$${@}\""
+    command: |
+      /bin/bash -c "
+        pm2 start /usr/src/nuxt-app/proxy.js
+        npm start
+      "

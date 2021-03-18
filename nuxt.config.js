@@ -94,7 +94,7 @@ export default {
     pass: process.env.BASIC_PASS || 'pa##4RD!',
     enabled: process.env.BASIC_ENABLED === 'true' // require boolean value(nullable)
   },
-
+  
   env: {
     WS_URL: process.env.WS_URL || 'http://localhost:3000'
   },

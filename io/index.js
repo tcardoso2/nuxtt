@@ -10,11 +10,13 @@ export default function () {
     const server = http.createServer(this.nuxt.renderer.app)
     const io = socketIO(server, {
       cors: {
-        origin: "https://expressive.ap.ngrok.io",
+        origin: process.env.WS_URL,
+        //"https://expressive.ap.ngrok.io",
         methods: ["GET", "POST"]
       }
     })
     console.log(">> Socket.io:: Setting up socket.io server...")
+    console.log(server)
     
     //TODO: Persist on disk as well, besides memory?
     /*try {

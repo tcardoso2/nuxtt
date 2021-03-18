@@ -22,6 +22,7 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 
 History:
 ========
+- v 0.2.0: Adding docker file, cypress
 - v 0.1.8: Adding pm2 scripts, added basic auth 
 - v 0.1.7: Testing with custom app - starting to bring over middleware and serverMiddleware modules;
   - included mongoose as depedendency
