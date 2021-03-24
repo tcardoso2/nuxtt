@@ -12,6 +12,6 @@ services:
     entrypoint: /bin/sh -c "/bin/sh -c \"$${@}\""
     command: |
       /bin/bash -c "
-        pm2 start /usr/src/nuxt-app/proxy.js
+        ./node_modules/.bin/pm2 start /usr/src/nuxt-app/proxy.js
         npm start
       "
