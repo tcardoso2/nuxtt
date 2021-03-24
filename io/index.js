@@ -16,7 +16,7 @@ export default function () {
       }
     })
     console.log(">> Socket.io:: Setting up socket.io server...")
-    console.log(server)
+    //console.log(server)
     
     //TODO: Persist on disk as well, besides memory?
     /*try {
@@ -60,10 +60,16 @@ export default function () {
       })
       
       socket.on('reset-game', async function () {
-        //Removes all messaes except the game-status
+        //Removes all messages except the game-status - not used for the moment?
+        console.log(`>> Socket.io:: [${referer}]\n
+            Received 'reset-game', will erase all messages except game-status (but set it to reset)`)
         let _gs = that.persistMsgs['game-status']
         that.persistMsgs = {}
-        if(_gs) that.persistMsgs['game-status'] = _gs
+        if(_gs) {
+          _gs.text = 'reset'
+          console.log(_gs)
+          that.persistMsgs['game-status'] = _gs
+        }
       })
 
       socket.on('message-facilitator', async function (message, persist) {

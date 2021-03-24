@@ -82,8 +82,8 @@ export default {
   modules: [
     //Custom
     //'bootstrap-vue/nuxt',
-    //'@nuxtjs/axios',
-    //'@nuxtjs/auth-next',
+    '@nuxtjs/axios',
+    '@nuxtjs/auth-next',
     '~/io',
     'nuxt-basic-auth-module'
     //,'~/data'
@@ -99,6 +99,27 @@ export default {
     WS_URL: process.env.WS_URL || 'http://localhost:3000'
   },
 
+
+  auth: {
+    strategies: {
+      local: {
+        token: {
+          property: 'Authorization',
+          // required: true,
+          type: 'Bearer'
+        },
+        user: {
+          property: 'user',
+          // autoFetch: true
+        },
+        endpoints: {
+          login: { url: 'http://localhost:3333/v1/auth/login', method: 'post' },
+          logout: { url: 'http://localhost:3333/v1/auth/login', method: 'post' },
+          user: { url: 'http://localhost:3333/v1/users/{id}', method: 'get' }
+        }
+      }
+    }
+  },
   /*auth: {
     // Options
     // Google: see https://auth.nuxtjs.org/providers/google
@@ -145,11 +166,12 @@ export default {
   // Middleware: https://nuxtjs.org/docs/2.x/directory-structure/middleware
   router: {
     middleware: [
-      //'auth'
+      'auth'
     ]
   },
 
   serverMiddleware: [
+    //'~/serverMiddleware/auth',
     '~/serverMiddleware/body',
     '~/serverMiddleware/api'
   ],
