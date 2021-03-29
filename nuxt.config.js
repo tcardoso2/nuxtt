@@ -48,7 +48,10 @@ export default {
   plugins: [
     //{ src: '@/plugins/bootstrap' },
     { src: '@/plugins/chartist' },
-    { src: '@/plugins/webfontloader', mode: 'client' } //Loaded client only
+    { src: '@/plugins/webfontloader', mode: 'client' }, //Loaded client only
+    { src: '~/plugins/local-storage' },
+    { src: '~/plugins/axios' },
+    { src: '~/plugins/auth.js' }
   ],
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -99,23 +102,27 @@ export default {
     WS_URL: process.env.WS_URL || 'http://localhost:3000'
   },
 
+  axios: {
+    baseURL: 'http://localhost:3332/v1',
+    credentials: false
+  },
 
   auth: {
     strategies: {
       local: {
-        token: {
+        /*token: {
           property: 'Authorization',
           // required: true,
           type: 'Bearer'
         },
         user: {
-          property: 'user',
+          property: 'data.user',
           // autoFetch: true
-        },
+        },*/
         endpoints: {
-          login: { url: 'http://localhost:3333/v1/auth/login', method: 'post' },
-          logout: { url: 'http://localhost:3333/v1/auth/login', method: 'post' },
-          user: { url: 'http://localhost:3333/v1/users/{id}', method: 'get' }
+          login: { url: 'auth/login', method: 'post', propertyName: false },
+          logout: { url: 'auth/logout', method: 'post' }/*,
+          user: { url: 'users/', method: 'get', propertyName: false }*/
         }
       }
     }
