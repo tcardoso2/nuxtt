@@ -2,14 +2,13 @@
 export const getters = {
   isAuthenticated(state) {
     console.log("  :: store:index ==> Running isAuthenticated!")
-    console.log(state)
     if(state.auth) {
       return state.auth.access_token && state.auth.access_token !== ''
     }
   },
   loggedInUser(state) {
     console.log("  :: store:index ==> Running loggedInUser!")
-    console.log(state)
+    console.log(state.auth.user)
     if(state.auth) {
       return state.auth.user
     }

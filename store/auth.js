@@ -18,9 +18,10 @@ export const state = () => ({
 
 export const mutations = {
   // store the logged in user in the state
-  [AUTH_MUTATIONS.SET_USER] (state, { id, email }) {
-    state.id = id
-    state.email_address = email
+  [AUTH_MUTATIONS.SET_USER] (state, user) {
+    state.id = user.id
+    state.email_address = user.email
+    state.user = user // redundant?
   },
 
   // store new or updated token fields in the state
@@ -32,6 +33,9 @@ export const mutations = {
       state.refresh_token = refresh.token
       state.refresh_token_expires = refresh.expires 
     }
+    //Hard-code
+    state.loggedIn = true
+    console.log("Last state is: ", state)
   },
 
   // clear our the state, essentially logging out the user
@@ -57,7 +61,7 @@ export const actions = {
     commit(AUTH_MUTATIONS.SET_PAYLOAD, tokens)
   },
 
-  async register ({ commit }, { email_addr, password }) {
+  async register ({ commit }, { email_address, password }) {
     // make an API call to register the user
     const { data: { data: { user, payload } } } = await this.$axios.post(
       '/auth/register', 

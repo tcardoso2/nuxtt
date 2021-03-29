@@ -13,6 +13,8 @@ export default ({ store, req, isDev }) => {
       // persist the access_token and refresh_token values from the "auth" store module
       'auth.access_token',
       'auth.refresh_token',
+      'auth.id',
+      'auth.loggedIn',
     ],
     storage: {
       // if on the browser, parse the cookies using js-cookie otherwise parse from the raw http request
