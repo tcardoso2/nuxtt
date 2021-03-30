@@ -50,8 +50,7 @@ export default {
     { src: '@/plugins/chartist' },
     { src: '@/plugins/webfontloader', mode: 'client' }, //Loaded client only
     { src: '~/plugins/local-storage' },
-    { src: '~/plugins/axios' },
-    { src: '~/plugins/auth.js' }
+    { src: '~/plugins/axios' }
   ],
 
   // Global CSS: https://go.nuxtjs.dev/config-css

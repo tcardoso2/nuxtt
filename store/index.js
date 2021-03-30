@@ -8,9 +8,9 @@ export const getters = {
   },
   loggedInUser(state) {
     console.log("  :: store:index ==> Running loggedInUser!")
-    console.log(state.auth.user)
+    console.log(state.auth)
     if(state.auth) {
-      return state.auth.user
+      return state.auth.name
     }
   }
 }

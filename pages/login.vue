@@ -1,29 +1,55 @@
 <template>
-  <div>
-    <form @submit.prevent="userLogin">
+  <v-card raised class="login">
+    <v-card-title class="headline justify-center">
+      Login to Expressive
+    </v-card-title>
+    <v-card-title class="justify-center">
       <div>
-        <label>Username</label>
-        <input type="text" v-model="login.email" />
+        <label for="username">Username</label>
+        <input id="username" v-model="login.email" />
       </div>
+      <v-spacer style="height:10px" />
       <div>
         <label>Password</label>
-        <input type="text" v-model="login.password" />
+        <input type="password" v-model="login.password" />
       </div>
-      <div>
-        <button type="submit">Submit</button>
-      </div>
-    </form>
-    <div v-if="isAuthenticated">
-      User: {{ loggedInUser }}
-    </div>
-  </div>
+      <v-spacer style="height:10px" />
+      <v-card-actions class="justify-center">
+        <v-btn
+          color="#E45471"
+          style="color: white"
+          nuxt
+          class="login"
+          @click.stop="userLogin"
+        >
+          Login
+        </v-btn>
+      </v-card-actions>
+    </v-card-title>
+  </v-card>
 </template>
+
+<style scoped>
+.login {
+  margin: auto;
+  margin-top: 15vh;
+  border-radius: 10px;
+  padding: 5% 5%;
+  text-align: center;
+  width: 50%;
+}
+input {
+  border: 1px black solid;
+}
+
+</style>
 
 <script>
 //Put in layout?
 import { mapGetters } from 'vuex'
 
 export default {
+  layout: 'custom.layouts/expressive.layouts/default',
   data() {
     return {
       login: {
@@ -39,77 +65,6 @@ export default {
     async userLogin() {
       try {
         await this.$store.dispatch('auth/login', this.login )
-
-        /*let response = await this.$auth.loginWith('local', { data: this.login })
-        if(response.status && response.statusText == "OK")
-          console.log(":: Login: Received status Ok...")
-          if(response.data.user && response.data.user.role) {
-            console.log(":: Login: Received user record...")
-            if(response.data.tokens) {
-              console.log(":: Saving session...")
-              this.$router.push('/')
-
-              //this.$toast.success('Logging in...')
-              //this.$auth.setUser(response.data.user)
-              this.$auth.setUserToken(response.data.tokens.access, response.data.tokens.refresh)
-                .then(() => console.log('Logged In!'))
-                .catch((e) => console.error('Error in saving user token...', e))
-            }
-          }
-        }*/
-        //Process response here!
-
-/*
-
-{
-    "data": {
-        "user": {
-            "role": "user",
-            "name": "fake name",
-            "email": "fake@example.com",
-            "id": "6055b5bcd59239a0a0e8859d"
-        },
-        "tokens": {
-            "access": {
-                "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MDU1YjViY2Q1OTIzOWEwYTBlODg1OWQiLCJpYXQiOjE2MTYzMTI1MjgsImV4cCI6MTYxNjMxNDMyOCwidHlwZSI6ImFjY2VzcyJ9.EXmVqAHu7c74Lw63iRpx7g4ejrFXtBaMM12qPIyoZFY",
-                "expires": "2021-03-21T08:12:08.729Z"
-            },
-            "refresh": {
-                "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MDU1YjViY2Q1OTIzOWEwYTBlODg1OWQiLCJpYXQiOjE2MTYzMTI1MjgsImV4cCI6MTYxODkwNDUyOCwidHlwZSI6InJlZnJlc2gifQ.nvi-iPzMnVB_Ke6qnsCt-0NFzY90Z1RAvMvj1kZZJTY",
-                "expires": "2021-04-20T07:42:08.729Z"
-            }
-        }
-    },
-    "status": 200,
-    "statusText": "OK",
-    "headers": {
-        "content-length": "620",
-        "content-type": "application/json; charset=utf-8"
-    },
-    "config": {
-        "url": "http://localhost:3333/v1/auth/login",
-        "method": "post",
-        "data": "{\"email\":\"fake@example.com\",\"password\":\"password1\"}",
-        "headers": {
-            "Content-Type": "application/json;charset=utf-8"
-        },
-        "baseURL": "http://localhost:3000/",
-        "transformRequest": [
-            null
-        ],
-        "transformResponse": [
-            null
-        ],
-        "timeout": 0,
-        "xsrfCookieName": "XSRF-TOKEN",
-        "xsrfHeaderName": "X-XSRF-TOKEN",
-        "maxContentLength": -1,
-        "maxBodyLength": -1
-    },
-    "request": {}
-}
-*/
-
       } catch (err) {
         console.log(err)
       }

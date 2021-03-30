@@ -15,6 +15,7 @@ export default ({ store, req, isDev }) => {
       'auth.refresh_token',
       'auth.id',
       'auth.loggedIn',
+      'auth.name',
     ],
     storage: {
       // if on the browser, parse the cookies using js-cookie otherwise parse from the raw http request

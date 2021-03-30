@@ -21,7 +21,7 @@ export const mutations = {
   [AUTH_MUTATIONS.SET_USER] (state, user) {
     state.id = user.id
     state.email_address = user.email
-    state.user = user // redundant?
+    state.name = user.name
   },
 
   // store new or updated token fields in the state
@@ -43,7 +43,9 @@ export const mutations = {
     state.id = null
     state.email_address = null
     state.access_token = null
-    state.refresh_token = null
+    state.refresh_token = null,
+    state.loggedIn = false,
+    name = ''
   },
 }
 
@@ -73,6 +75,16 @@ export const actions = {
     commit(AUTH_MUTATIONS.SET_PAYLOAD, payload)
   },
 
+  async user ({ commit, dispatch }, { id }) {
+    // make an API call to login the user with an email address and password
+    const { data: { user } } = await this.$axios.get(
+      `/auth/users/${id}`
+    )
+    // commit the user and tokens to the state
+    console.log(user)
+    commit(AUTH_MUTATIONS.SET_USER, user)
+  },
+
   // given the current refresh token, refresh the user's access token to prevent expiry
   async refresh ({ commit, state }) {
     console.log("  :: store:auth ==> Running refresh!")
@@ -88,7 +100,14 @@ export const actions = {
   },
 
   // logout the user
-  logout ({ commit, state }) {
+  async logout ({ commit, state }) {
+    console.log("  :: store:auth ==> Running logout!")
+    const { refresh_token } = state
+    const data = await this.$axios.post(
+      '/auth/logout', 
+      { refreshToken: refresh_token }
+    )
+    console.log(`  :: store:auth ==> ${data}`)
     commit(AUTH_MUTATIONS.LOGOUT)
   },
 }
