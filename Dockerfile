@@ -28,8 +28,9 @@ RUN cd /usr/src/nuxt-app
 RUN echo "{}" > .mongodb.json
 
 RUN npm run build
+RUN npm install pm2
 
-# expose 5000 on container
+# expose 3000 on container
 EXPOSE 3000
 
 # set app serving to permissive / assigned
