@@ -313,6 +313,8 @@ export default {
       }
     }
   },
+  mounted() {
+  },
   computed: {
     ...mapGetters(['isAuthenticated', 'loggedInUser'])
   },

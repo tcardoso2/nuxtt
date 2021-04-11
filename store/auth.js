@@ -116,6 +116,10 @@ export const getters = {
   // determine if the user is authenticated based on the presence of the access token
   isAuthenticated: (state) => {
     console.log("  :: store:auth ==> Running isAuthenticated!")
+    if(process.env.NO_AUTH_DEV == '1' && process.env.NODE_ENV == 'development') {
+      console.log("  :: store:index ==> Detected Dev environment and NO_AUTH_DEV, will skip auth...!")
+      return true;
+    }
     return state.access_token && state.access_token !== ''
   },
 }

@@ -2,6 +2,10 @@
 export const getters = {
   isAuthenticated(state) {
     console.log("  :: store:index ==> Running isAuthenticated!")
+    if(process.env.NO_AUTH_DEV == '1' && process.env.NODE_ENV == 'development') {
+      console.log("  :: store:index ==> Detected Dev environment and NO_AUTH_DEV, will skip auth...!")
+      return true;
+    }
     if(state.auth) {
       return state.auth.access_token && state.auth.access_token !== ''
     }
@@ -9,6 +13,10 @@ export const getters = {
   loggedInUser(state) {
     console.log("  :: store:index ==> Running loggedInUser!")
     console.log(state.auth)
+    if(process.env.NO_AUTH_DEV == '1' && process.env.NODE_ENV == 'development') {
+      console.log("  :: store:index ==> Detected Dev environment and NO_AUTH_DEV, will skip auth...!")
+      return "guest"
+    }
     if(state.auth) {
       return state.auth.name
     }
