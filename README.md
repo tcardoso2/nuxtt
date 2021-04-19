@@ -22,6 +22,7 @@ For detailed explanation on how Nuxt works, check out [Nuxt.js docs](https://nux
 History:
 ========
 
+- v 0.2.1: Adding tests for Authentication (WIP)
 - v 0.2.0: Implementation of Login authentication, via external API (JWT) (WIP)
 - v 0.1.8: Adding pm2 scripts, added basic auth 
 - v 0.1.7: Testing with custom app - starting to bring over middleware and serverMiddleware modules;

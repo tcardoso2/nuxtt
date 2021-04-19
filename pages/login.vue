@@ -51,18 +51,21 @@
       <form class="sign-in" action="#">
         <h2>Player Sign-In</h2>
         <div>Use the Game Code provided <br /> by your facilitator</div>
-        <input type="email" placeholder="Player Email" v-model="login.email" />
-        <input type="password" placeholder="Game Code" v-model="login.password"/>
+        <input id="pEmail" type="email" placeholder="Player Email" v-model="login.email" />
+        <input id="pPass" type="password" placeholder="Game Code" v-model="login.password"/>
         <a v-if="displayForget" href="#">Forget your password?</a>
         <v-btn
           color="#E45471"
-          style="color: white"
+          style="color: white" 
           nuxt
           class="login"
           @click.stop="userLogin"
         >
           Sign-in
         </v-btn>
+        <div id="pLoginError" class="error">
+          {{ errorMessage }}
+        </div>
     </form>
     </div>
   </article>
@@ -307,6 +310,7 @@ export default {
     return {
       displayForget: false,
       userSignUp: false,
+      errorMessage: '',
       login: {
         email: '',
         password: ''
@@ -322,12 +326,27 @@ export default {
     async userLogin() {
       try {
         console.log(this.login)
-        await this.$store.dispatch('auth/login', this.login )
+        if(this.validate()) {
+          await this.$store.dispatch('auth/login', this.login )
+          this.$router.push({ name: 'login', query: { redirect: '/path' } });
+        }
       } catch (err) {
+        if(err == "Error: Request failed with status code 401") {
+          this.errorMessage = "Wrong username / password"
+        } else {
+          this.errorMessage = "Error. Please contact Admin"
+        }
         console.log(err)
       }
     },
     async userRegistration() {
+    },
+    validate(){
+      if (!this.login.password) {
+        this.errorMessage = "Password is required"
+        return false
+      }
+      return true
     }
   }
 }
