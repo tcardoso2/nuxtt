@@ -7,6 +7,7 @@ export const getters = {
       return true;
     }
     if(state.auth) {
+      //TODO reuse the getter in auth?
       return state.auth.access_token && state.auth.access_token !== ''
     }
   },
@@ -19,6 +20,12 @@ export const getters = {
     }
     if(state.auth) {
       return state.auth.name
+    }
+  },
+  gameCode(state) {
+    console.log("  :: store:index ==> Running gameCode!")
+    if(state.auth) {
+      return state.auth.game_code
     }
   }
 }

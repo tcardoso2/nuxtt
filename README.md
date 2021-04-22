@@ -22,6 +22,7 @@ For detailed explanation on how Nuxt works, check out [Nuxt.js docs](https://nux
 History:
 ========
 
+- v 0.2.2: Adding cookie-based session Id (XY Game), revamping the socket communication
 - v 0.2.1: Adding tests for Authentication (WIP)
 - v 0.2.0: Implementation of Login authentication, via external API (JWT) (WIP)
 - v 0.1.8: Adding pm2 scripts, added basic auth 

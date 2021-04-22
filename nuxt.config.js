@@ -172,7 +172,7 @@ export default {
   // Middleware: https://nuxtjs.org/docs/2.x/directory-structure/middleware
   router: {
     middleware: [
-      /*'auth'*/
+      'auth'
     ]
   },
 
