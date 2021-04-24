@@ -61,12 +61,24 @@ export default function () {
         console.log(`>> Socket.io:: [${referer}]\n
             Received 'last-status', session Id exists? (${sessionId}). Will respond with ${JSON.stringify(that.persistMsgs["game-status"])}`)
         //socket.broadcast.emit('update-status', that.persistMsgs["game-status"]) // Will always be null?
+        //IMPORTANT: Fix me later!
+        //Workaround (Mockup only!), for now it responds all sessions if no session is presented
+        //Existing sessions should be provided by an actual service (wait for Gaminar ws or implement own?)
         if(that.persistMsgs["game-status"]) {
-          return fn(that.persistMsgs["game-status"][sessionId])
+          return fn(sessionId ? that.persistMsgs["game-status"][sessionId] : that.persistMsgs["game-status"])
         }
         fn()
       })
       
+      socket.on('validate-session', function (fn) {
+        let sessionId = cookie.parse(socket.request.headers.cookie)["authentication-cookie"].game_code;
+        console.log(`>> Socket.io:: [${referer}]\n
+            Received 'validate-session', session Id exists? (${sessionId}).`)
+        let result = fn(sessionId)
+        console.log(result)
+        return //TODO Comparar com sessoes ja iniciadas pelos facilitators
+      })
+
       socket.on('reset-game', async function (message) {
         //Removes all messages except the game-status - not used for the moment?
         console.log(`>> Socket.io:: [${referer}]\n
@@ -86,7 +98,10 @@ export default function () {
         console.log(`>> Socket.io:: [${referer}]\n
             Received 'message-facilitator' = ${JSON.stringify(message)}`)
         messages.push(message)
-        socket.broadcast.emit('message-facilitator', message)
+        socket.broadcast.emit('message-facilitator', message) //Make sure does not go to other players?
+        // TODO!!!!! Should emit to specific room only! Of the session
+        // to all clients in room1 except the sender
+        //socket.to("room1").emit(/* ... */);
         if(message.persist) {
             //await storage.setItem(message.persist, message)
             //Not working the above...
