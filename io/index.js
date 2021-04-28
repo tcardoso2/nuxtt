@@ -1,6 +1,8 @@
 import http from 'http'
 import socketIO from 'socket.io'
 import cookie from 'cookie';
+import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from 'constants';
+//import { isArguments } from 'cypress/types/lodash';
 
 const storage = require('node-persist');
 
@@ -57,19 +59,48 @@ export default function () {
       })
       
       socket.on('last-status', function (fn) {
-        let sessionId = cookie.parse(socket.request.headers.cookie)["authentication-cookie"].game_code;
+        let authInfo = cookie.parse(socket.request.headers.cookie)["authentication-cookie"];
+        if(authInfo && authInfo.length > 0) {
+          authInfo = JSON.parse(authInfo)
+        }
+        console.log("AuthInfo.auth: ", authInfo.auth)
         console.log(`>> Socket.io:: [${referer}]\n
-            Received 'last-status', session Id exists? (${sessionId}). Will respond with ${JSON.stringify(that.persistMsgs["game-status"])}`)
+            Received 'last-status', session Id exists? (${authInfo.auth && authInfo.auth.game_code}). Will respond with ${JSON.stringify(that.persistMsgs["game-status"])}`)
         //socket.broadcast.emit('update-status', that.persistMsgs["game-status"]) // Will always be null?
         //IMPORTANT: Fix me later!
         //Workaround (Mockup only!), for now it responds all sessions if no session is presented
         //Existing sessions should be provided by an actual service (wait for Gaminar ws or implement own?)
         if(that.persistMsgs["game-status"]) {
-          return fn(sessionId ? that.persistMsgs["game-status"][sessionId] : that.persistMsgs["game-status"])
+          return fn(authInfo.auth && authInfo.auth.game_code ? that.persistMsgs["game-status"][authInfo.auth.game_code] : that.persistMsgs["game-status"])
         }
         fn()
       })
       
+      socket.on('users', function (fn) {
+        let authInfo = cookie.parse(socket.request.headers.cookie)["authentication-cookie"];
+        if(authInfo && authInfo.length > 0) {
+          authInfo = JSON.parse(authInfo)
+        }
+        console.log("AuthInfo.auth: ", authInfo.auth)
+        let users = []
+        if(authInfo.auth && authInfo.auth.game_code) {
+          let usersDict = that.persistMsgs[authInfo.auth.game_code]
+          if(usersDict) {
+            let keys = Object.keys(usersDict)
+            for(var i = 0; i < keys.length; i++) {
+              users.push(usersDict[keys[i]])
+            }  
+          }
+        }
+        console.log(`>> Socket.io:: [${referer}]\n
+            Received 'users', session Id exists? (${authInfo.auth && authInfo.auth.game_code}). Will respond with ${users.length} users.`)
+        //socket.broadcast.emit('update-status', that.persistMsgs["game-status"]) // Will always be null?
+        //IMPORTANT: Fix me later!
+        //Workaround (Mockup only!), for now it responds all sessions if no session is presented
+        //Existing sessions should be provided by an actual service (wait for Gaminar ws or implement own?)
+        fn(users)
+      })
+
       socket.on('validate-session', function (fn) {
         let sessionId = cookie.parse(socket.request.headers.cookie)["authentication-cookie"].game_code;
         console.log(`>> Socket.io:: [${referer}]\n
@@ -103,10 +134,30 @@ export default function () {
         // to all clients in room1 except the sender
         //socket.to("room1").emit(/* ... */);
         if(message.persist) {
-            //await storage.setItem(message.persist, message)
-            //Not working the above...
-            that.persistMsgs[message.persist] = message;
+          //Will persist this message
+          if(typeof message.persist === 'object') {
+            //Will persist this message in the order of it's keys (should be alphabetically ordered)
+            let keys = Object.keys(message.persist)
+            let persistObj = that.persistMsgs
+            let key = ''
+            //Quite tricky piece of code this for loop. Basically builds the keys hierarchy object taking the keys 
+            //in alphabetic order one by one
+            for(let i=0; i < keys.length; i++){
+              if(key) {
+                persistObj = persistObj[key]  
+              }
+              key = message.persist[keys[i]]
+              if(!persistObj[key]) {
+                persistObj[key] = {}
+              }
+            }
+            persistObj[key] = message
+          } else {
+            //Simple object, assuming it's a string, in practice could be also a bool or a integer, but that would be weird...
+            that.persistMsgs[message.persist] = message
+          }
         }
+        console.log(that.persistMsgs)
         console.log(`>> Socket.io:: In-mem session Persistent storage has ${Object.keys(that.persistMsgs).length} item(s)`)
         console.log(`>> Socket.io:: Emited message to all facilitator listeners`)
       })
