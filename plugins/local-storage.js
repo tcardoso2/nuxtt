@@ -17,6 +17,7 @@ export default ({ store, req, isDev }) => {
       'auth.loggedIn',
       'auth.name',
       'auth.game_code',
+      'auth.player_ids',
     ],
     storage: {
       // if on the browser, parse the cookies using js-cookie otherwise parse from the raw http request

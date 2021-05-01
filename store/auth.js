@@ -5,7 +5,8 @@ export const AUTH_MUTATIONS = {
   SET_USER: 'SET_USER',
   SET_PAYLOAD: 'SET_PAYLOAD',
   LOGOUT: 'LOGOUT',
-  SET_GAME_CODE: 'SET_GAME_CODE'
+  SET_GAME_CODE: 'SET_GAME_CODE',
+  SET_PLAYER_ID: 'SET_PLAYER_ID'
 }
 
 export const namespaced = true
@@ -15,7 +16,8 @@ export const state = () => ({
   refresh_token: null, // JWT refresh token
   id: null, // user id
   email_address: null, // user email address
-  game_code: null // game code
+  game_code: null, // game code
+  player_ids: {} // game code
 })
 
 export const mutations = {
@@ -52,6 +54,11 @@ export const mutations = {
 
   [AUTH_MUTATIONS.SET_GAME_CODE] (state, gameCode) {
     state.game_code = gameCode
+    console.log("Last state is: ", state)
+  },
+
+  [AUTH_MUTATIONS.SET_PLAYER_ID] (state, { user, playerId }) {
+    state.player_ids[user] = playerId
     console.log("Last state is: ", state)
   },
 }
@@ -123,6 +130,13 @@ export const actions = {
     console.log("  :: store:auth ==> Running setGameCode!")
     // commit the game code to the state
     commit(AUTH_MUTATIONS.SET_GAME_CODE, gameCode)
+  },
+
+  // set the player Id (there can be several player ids in the session)
+  async setPlayerId ({ commit }, { user, playerId }) {
+    console.log("  :: store:auth ==> Running setPlayerId!", user, playerId)
+    // commit the player Id to the state
+    commit(AUTH_MUTATIONS.SET_PLAYER_ID, { user, playerId })
   }
 }
 

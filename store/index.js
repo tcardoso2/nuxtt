@@ -27,6 +27,12 @@ export const getters = {
     if(state.auth) {
       return state.auth.game_code
     }
+  },
+  playerIds(state) {
+    console.log("  :: store:index ==> Running playerIds!")
+    if(state.auth) {
+      return state.auth.player_ids
+    }
   }
 }
 

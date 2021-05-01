@@ -22,6 +22,7 @@ For detailed explanation on how Nuxt works, check out [Nuxt.js docs](https://nux
 History:
 ========
 
+- v 0.2.4: Added auth.player_ids to the cookies, to be able to record players in a different manner than facis, and to allow holistic automated testin in future with several players
 - v 0.2.3: Changes on the way io structures messages, added users channel
 - v 0.2.2: Adding cookie-based session Id (XY Game), revamping the socket communication
 - v 0.2.1: Adding tests for Authentication (WIP)
