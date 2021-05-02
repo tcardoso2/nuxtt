@@ -2,6 +2,8 @@ import http from 'http'
 import socketIO from 'socket.io'
 import cookie from 'cookie';
 import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from 'constants';
+import querystring from 'querystring';
+
 //import { isArguments } from 'cypress/types/lodash';
 
 const storage = require('node-persist');
@@ -59,19 +61,27 @@ export default function () {
       })
       
       socket.on('last-status', function (fn) {
-        let authInfo = cookie.parse(socket.request.headers.cookie)["authentication-cookie"];
+        let cookieObj = cookie.parse(socket.request.headers.cookie)
+        let _url = referer.split('?')
+        let qString = querystring.parse(_url[_url.length-1])
+        let authInfo = cookieObj["authentication-cookie"]
         if(authInfo && authInfo.length > 0) {
           authInfo = JSON.parse(authInfo)
         }
         console.log("AuthInfo.auth: ", authInfo.auth)
         console.log(`>> Socket.io:: [${referer}]\n
-            Received 'last-status', session Id exists? (${authInfo.auth && authInfo.auth.game_code}). Will respond with ${JSON.stringify(that.persistMsgs["game-status"])}`)
+            Received 'last-status', session Id (Cookie) exists? (${authInfo.auth && authInfo.auth.game_code}). Will respond with ${JSON.stringify(that.persistMsgs["game-status"])}`)
+        console.log(`>> Socket.io:: [${referer}]\n
+            Session Id (Query String) exists? (${qString.gameCode})`)
+        //console.log(qString, referer)
+        //First fetches Query String, only then from Cookie
+        let gameCode = qString.gameCode ? qString.gameCode : authInfo.auth && authInfo.auth.game_code
         //socket.broadcast.emit('update-status', that.persistMsgs["game-status"]) // Will always be null?
         //IMPORTANT: Fix me later!
         //Workaround (Mockup only!), for now it responds all sessions if no session is presented
         //Existing sessions should be provided by an actual service (wait for Gaminar ws or implement own?)
         if(that.persistMsgs["game-status"]) {
-          return fn(authInfo.auth && authInfo.auth.game_code ? that.persistMsgs["game-status"][authInfo.auth.game_code] : that.persistMsgs["game-status"])
+          return fn(gameCode ? that.persistMsgs["game-status"][gameCode] : that.persistMsgs["game-status"])
         }
         fn()
       })
@@ -171,6 +181,16 @@ export default function () {
           //TODO: Use the Hash instead to persist?
           //await storage.setItem(message.persist, message)
           //Not working the above...
+
+          //Do extra handling here
+          switch(message.persist) {
+            case 'game-update-points':
+              //Add the actual points to the user records!
+              that.persistMsgs[message.sessionId][message.text].points = message.value //Add instead
+              break;
+            default:
+              break
+          }
           that.persistMsgs[message.persist][message.sessionId] = message
         }
         console.log(that.persistMsgs)
