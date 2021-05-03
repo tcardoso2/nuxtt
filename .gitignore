@@ -99,6 +99,7 @@ custom.assets
 custom.styles
 custom.components
 custom.static
+custom.io
 
 # Nuxt custom backup files
 .nuxt*.bk
