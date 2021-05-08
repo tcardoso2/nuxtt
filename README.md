@@ -30,7 +30,7 @@ History:
 - v 0.2.0: Implementation of Login authentication, via external API (JWT) (WIP)
 - v 0.1.8: Adding pm2 scripts, added basic auth 
 - v 0.1.7: Testing with custom app - starting to bring over middleware and serverMiddleware modules;
-  - included mongoose as depedendency
+  - included mongoose as dependency
   - included plugins from master and cleaned up configuration a bit
   - included other necessary dependencies
   - included io (socket-server)

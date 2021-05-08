@@ -30,7 +30,7 @@ function getSessionInfo(socket, referer) {
     authInfo = JSON.parse(authInfo)
   }
   //To retrieve the game code, first attempts to fetch from the Query String, only then from Cookie
-  let gameCode = qString.gameCode ? qString.gameCode : authInfo.auth && authInfo.auth.game_code
+  let gameCode = qString.gameCode ? qString.gameCode : authInfo && authInfo.auth && authInfo.auth.game_code
   
   //console.log("AuthInfo.auth: ", authInfo.auth)
   return { authInfo, qString, gameCode }
@@ -92,7 +92,7 @@ export default function () {
         //console.log("AuthInfo.auth: ", authInfo.auth)
 
         console.log(`>> Socket.io:: [${referer}]\n
-            Received 'last-status', session Id (Cookie) exists? (${authInfo.auth && authInfo.auth.game_code}). Will respond with ${JSON.stringify(that.persistMsgs["game-status"])}`)
+            Received 'last-status', session Id (Cookie) exists? (${authInfo && authInfo.auth && authInfo.auth.game_code}). Will respond with ${JSON.stringify(that.persistMsgs["game-status"])}`)
         console.log(`>> Socket.io:: [${referer}]\n
             Session Id (Query String) exists? (${qString.gameCode})`)
 
@@ -113,10 +113,10 @@ export default function () {
         console.log(`>> Socket.io:: [${referer}]\n
             Received 'my-record', game code exists? ${gameCode}`)
 
-        if(that.persistMsgs[gameCode] && that.persistMsgs[gameCode][qString.u]) {
+        if(gameCode && that.persistMsgs[gameCode] && that.persistMsgs[gameCode][qString.u]) {
           //Checks authentifcity of request (WIP), basically the cookie with player id must match the value on the user record
           //TODO: Put this in generic code?
-          if(that.persistMsgs[gameCode][qString.u].code != authInfo.auth.player_ids[qString.u]) {
+          if(authInfo && that.persistMsgs[gameCode][qString.u].code != authInfo.auth.player_ids[qString.u]) {
             console.warn("ATTENTION! player code does not match (WIP) For now this is an experimental feature and I'll let it go...")
           }
           return fn(that.persistMsgs[gameCode][qString.u])
@@ -131,7 +131,7 @@ export default function () {
         }
         //console.log("AuthInfo.auth: ", authInfo.auth)
         let users = []
-        if(authInfo.auth && authInfo.auth.game_code) {
+        if(authInfo && authInfo.auth && authInfo.auth.game_code) {
           let usersDict = that.persistMsgs[authInfo.auth.game_code]
           if(usersDict) {
             let keys = Object.keys(usersDict)
@@ -162,7 +162,6 @@ export default function () {
         //Removes all messages except the game-status - not used for the moment?
         console.log(`>> Socket.io:: [${referer}]\n
             Received 'reset-game', will erase all messages except game-status (but set it to reset)`)
-        //let _gs = that.persistMsgs['game-status']
         that.persistMsgs['game-status'][message.sessionId].text = 'reset'
         //TODO: Reset only the session messages
         //that.persistMsgs = {}

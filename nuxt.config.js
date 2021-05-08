@@ -203,6 +203,11 @@ export default {
   //Could not add jquery as plugin, see it's added to page header instead
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+    babel:{
+      plugins: [
+        ['@babel/plugin-proposal-private-methods', { loose: true }]
+      ]
+    }
     /*plugins: [
       new webpack.ProvidePlugin({
         // global modules
