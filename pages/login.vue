@@ -1,4 +1,25 @@
 <template>
+  <v-row align="center" justify="center">
+    <v-col cols="12" sm="8" md="4">
+      <v-card class="elevation-12" v-if="loggedIn">
+        <v-card-title>Logging in.</v-card-title>
+        <v-card-text
+          >Logging in, please wait...
+          <v-progress-circular indeterminate color="green"></v-progress-circular>
+        </v-card-text>
+      </v-card>
+      <v-card class="elevation-12" v-else>
+        <v-card-title>You're not logged in</v-card-title>
+        <v-card-text>Click the button to log into your account. </v-card-text>
+        <v-card-actions>
+          <v-btn @click="login" color="primary">Login</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-col>
+  </v-row>
+</template>
+
+<!--template>
   <article>
     <div class="container" :class="{'sign-up-active': userSignUp}">
       <div class="overlay-container">
@@ -59,7 +80,7 @@
           style="color: white" 
           nuxt
           class="login"
-          @click.stop="userLogin"
+          @click.stop="login"
         >
           Sign-in
         </v-btn>
@@ -69,7 +90,7 @@
     </form>
     </div>
   </article>
-</template>
+</template-->
 
 <!--template>
   <v-card raised class="login">
@@ -93,7 +114,7 @@
           style="color: white"
           nuxt
           class="login"
-          @click.stop="userLogin"
+          @click.stop="login"
         >
           Login
         </v-btn>
@@ -311,10 +332,11 @@ export default {
       displayForget: false,
       userSignUp: false,
       errorMessage: '',
-      login: {
+      login2: {
         email: '',
         password: ''
-      }
+      },
+      loggedIn: false
     }
   },
   mounted() {
@@ -322,8 +344,19 @@ export default {
   computed: {
     ...mapGetters(['isAuthenticated', 'loggedInUser'])
   },
+  created() {
+    this.loggedIn = this.$auth.strategy.token.get()
+    console.log(`Created:: loggedIn ${this.loggedIn}`)
+  },
   methods: {
-    async userLogin() {
+    login() {
+      this.$auth.loginWith("awsCognito");
+    },
+    logout() {
+      this.$auth.logOut("awsCognito");
+    },
+    //Custom Locally hosted function
+    async loginLocal() {
       try {
         console.log(this.login)
         if(this.validate()) {
