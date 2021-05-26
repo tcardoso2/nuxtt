@@ -1,5 +1,5 @@
 #!/bin/bash
 
-pm2 start npm --name "nuxtt" -- start
+./node_modules/.bin/pm2 start npm --name "nuxtt" -- start
 
 

@@ -141,7 +141,7 @@ export default function () {
           }
         }
         console.log(`>> Socket.io:: [${referer}]\n
-            Received 'users', session Id exists? (${authInfo.auth && authInfo.auth.game_code}). Will respond with ${users.length} users.`)
+            Received 'users', session Id exists? (${authInfo && authInfo.auth && authInfo.auth.game_code}). Will respond with ${users.length} users.`)
         //socket.broadcast.emit('update-status', that.persistMsgs["game-status"]) // Will always be null?
         //IMPORTANT: Fix me later!
         //Workaround (Mockup only!), for now it responds all sessions if no session is presented
