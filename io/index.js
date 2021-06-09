@@ -3,6 +3,7 @@ import socketIO from 'socket.io'
 import cookie from 'cookie'
 import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from 'constants';
 import querystring from 'querystring'
+import util from 'util'
 import ioHooks from './custom.io/xy.io/hooks.js' //Make this dynamic depending on the arg passed or another configuration in nuxt or package.json
 
 //import { isArguments } from 'cypress/types/lodash';
@@ -185,8 +186,10 @@ export default function () {
         
         //TODO: Manage in-memory with another separate module!
         if(message.persist) {
+          console.log('Message is set to persist...')
           //Will persist this message
           if(typeof message.persist === 'object') {
+            console.log('Hierarchy of keys found, will iterate...', message.persist)
             //Will persist this message in the order of it's keys (should be alphabetically ordered)
             let keys = Object.keys(message.persist)
             let persistObj = that.persistMsgs
@@ -195,18 +198,25 @@ export default function () {
             //in alphabetic order one by one
             for(let i=0; i < keys.length; i++){
               if(key) {
+                process.stdout.write(`${key} -> `);
                 persistObj = persistObj[key]  
               }
               key = message.persist[keys[i]]
+              console.log(key)
               if(!persistObj[key]) {
                 persistObj[key] = {}
               }
             }
+            console.log() //Needed after stdout.write to force a new line
             if(!persistObj[key]) {
+              console.log('Will add a new persisted message!')
               //It's a new message
               persistObj[key] = message
             } else {
               //Already exists: Assign to the target the properties of the new message
+              console.log('Persisted object already exists... updating')
+              //console.log(persistObj[key])
+              //console.log(message)
               Object.assign(persistObj[key], message)
             }
           } else {
@@ -214,7 +224,8 @@ export default function () {
             that.persistMsgs[message.persist] = message
           }
         }
-        console.log(that.persistMsgs)
+        console.log("(Listing persisted messages FYI...)")
+        console.log(util.inspect(that.persistMsgs, false, null, true /* enable colors */))
         console.log(`>> Socket.io:: In-mem session Persistent storage has ${Object.keys(that.persistMsgs).length} item(s)`)
         console.log(`>> Socket.io:: Emited message to all facilitator listeners`)
       })
@@ -231,7 +242,7 @@ export default function () {
           switch(message.persist) {
             case 'game-update-points':
               //Add the actual points to the user records!
-              let u = that.persistMsgs[message.sessionId][message.text]
+              let u = that.persistMsgs[message.sessionId][message.main.status]
               console.log(`will update points for player ${u.from}, current points: ${u.points}`)
               if(!u.points) u.points = 0
               u.points += message.value

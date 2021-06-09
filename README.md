@@ -22,6 +22,7 @@ For detailed explanation on how Nuxt works, check out [Nuxt.js docs](https://nux
 History:
 ========
 
+- v 0.2.7: Small fixes, more/better logs on socket.io server
 - v 0.2.6: Integrated with Amazon Cognito - still some cleaning up to do 
 - v 0.2.5: Added socket.io hooks specific to each application, separately tracked from this repo, fixed points issue for client users, now updates the user both during game and at start
 - v 0.2.4: Added auth.player_ids to the cookies, to be able to record players in a different manner than facis, and to allow holistic automated testin in future with several players

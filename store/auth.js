@@ -133,10 +133,15 @@ export const actions = {
   },
 
   // set the player Id (there can be several player ids in the session)
-  async setPlayerId ({ commit }, { user, playerId }) {
+  async setPlayerId ({ commit, state }, { user, playerId }) {
     console.log("  :: store:auth ==> Running setPlayerId!", user, playerId)
-    // commit the player Id to the state
+    // commit the player Id to the state, but check if by chance is there (could be if you run several games with same Id, so I force for different ids on same browser)
+    if(state.player_ids[user]) {
+      console.warn(`User ${user} already exists, there could be issues if the same username was used for another session, the user should clean existing game cookies`)
+      //return false
+    }
     commit(AUTH_MUTATIONS.SET_PLAYER_ID, { user, playerId })
+    return true
   }
 }
 
