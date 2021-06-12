@@ -237,25 +237,29 @@ export default function () {
           //TODO: Use the Hash instead to persist?
           //await storage.setItem(message.persist, message)
           //Not working the above...
-
           //Do extra handling here
+          let u //TODO, u is retrieved differently dependin on the type of message persist, align in future!
           switch(message.persist) {
             case 'game-update-points':
+              u = that.persistMsgs[message.sessionId][message.main.status]
               //Add the actual points to the user records!
-              let u = that.persistMsgs[message.sessionId][message.main.status]
               console.log(`will update points for player ${u.from}, current points: ${u.points}`)
               if(!u.points) u.points = 0
               u.points += message.value
-              //message.points = u.points - not necessary, as the socket client will use the value instead
               break;
-            default:
+            case 'game-update-team':
+              u = that.persistMsgs[message.sessionId][message.main]
+              console.log(`will update team for player ${u.from}, current team: ${u.main.team}`)
+              u.main.team = message.value
+              break;
+            default:  
               that.persistMsgs[message.persist][message.sessionId] = message
               break
           }
         }
         messages.push(message)
         socket.broadcast.emit('message-players', message) //TODO: Create room concept instead of sending to all!, only send to players in same rrom as Session Id (game code)
-        console.log(that.persistMsgs)
+        console.log(util.inspect(that.persistMsgs, false, null, true /* enable colors */))
         console.log(`>> Socket.io:: In-mem session Persistent storage has ${Object.keys(that.persistMsgs).length} item(s)`)
         console.log(`>> Socket.io:: Emited message to all player listeners`)
       })
