@@ -115,12 +115,37 @@ export default function () {
             Received 'my-record', game code exists? ${gameCode}`)
 
         if(gameCode && that.persistMsgs[gameCode] && that.persistMsgs[gameCode][qString.u]) {
-          //Checks authentifcity of request (WIP), basically the cookie with player id must match the value on the user record
+          //Checks authenticity of request (WIP), basically the cookie with player id must match the value on the user record
           //TODO: Put this in generic code?
           if(authInfo && that.persistMsgs[gameCode][qString.u].code != authInfo.auth.player_ids[qString.u]) {
             console.warn("ATTENTION! player code does not match (WIP) For now this is an experimental feature and I'll let it go...")
           }
           return fn(that.persistMsgs[gameCode][qString.u])
+        }
+        fn()
+      })
+
+      socket.on('team-record', function (fn) {
+        let { authInfo, qString, gameCode } = getSessionInfo(socket, referer)
+
+        console.log(`>> Socket.io:: [${referer}]\n
+            Received 'team-record', game code exists? ${gameCode}`)
+
+        if(gameCode && that.persistMsgs[gameCode] && that.persistMsgs[gameCode][qString.u]) {
+          return fn([
+            {
+              email: "Eusebio"
+            },
+            {
+              email: "Mourinho"
+            },
+            {
+              email: "Hard-coded"
+            },
+            {
+              email: "Change me!"
+            },
+          ])
         }
         fn()
       })
