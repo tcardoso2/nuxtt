@@ -67,29 +67,53 @@ export default function () {
     // overwrite nuxt.server.listen()
     this.nuxt.server.listen = (port, host) => new Promise(resolve => server.listen(port || 3000, host || 'localhost', resolve))
     // close this server on 'close' event
-    this.nuxt.hook('close', () => new Promise(server.close))
+    this.nuxt.hook('close', (a,b) => {
+      console.log(">> Socket.io:: Received 'close' event, closing the server...")
+      new Promise(server.close)
+    })
 
     // Add socket.io events
     const messages = [] //Do I need storage persistance if this already exists?
     let that = this;
+
     io.on('connection', async (socket) => {
       
-      console.log(`>> Socket.io:: In-mem session Persistent storage has ${Object.keys(that.persistMsgs).length} item(s)`)
-      //console.log(await storage.getItem('default_ready'));
       let referer = socket.handshake.headers.referer
       console.log(`>> Socket.io:: [${referer}]\n
-            Received new connection`)
+            ######## SOCKET.IO: Received new connection!`)
       console.log();
-      
+      console.log(`Socket Client Id: ${socket.client.id}`)
+      console.log("Socket handshake query:")
+
+      console.log(socket.handshake.query)
+
+      console.log(`>> Socket.io:: In-mem session Persistent storage has ${Object.keys(that.persistMsgs).length} item(s)`)
+      //console.log(await storage.getItem('default_ready'));
+      console.log("Existing socket connections", socket.adapter.rooms)
+    
       socket.on('last-messages', function (fn) {
         console.log(`>> Socket.io:: [${referer}]\n
             Received 'last-messages'`)
         fn(messages.slice(-50))
       })
       
-      socket.on('last-status', function (fn) {
-        let { authInfo, qString, gameCode } = getSessionInfo(socket, referer)
+      socket.on('join',function(cid){
+        console.log(`>> Socket.io:: [${referer}]\n
+            Received 'join'`)
+        console.log(cid)
+        console.log(`Socket Client Id: ${socket.client.id}, user id: ${cid.clientId}`)
+        return "OK!"
+      });
+    
+      socket.on('disconnect',function(reason){
+        console.log(">> Socket.io! User disconnected!", reason)
+        console.log(`Socket Client Id: ${socket.client.id}`)
+        console.log("Existing socket connections", socket.adapter.rooms)
+      });
 
+      socket.on('last-status', function (fn) {
+
+        let { authInfo, qString, gameCode } = getSessionInfo(socket, referer)
         //console.log("AuthInfo.auth: ", authInfo.auth)
 
         console.log(`>> Socket.io:: [${referer}]\n
@@ -129,22 +153,27 @@ export default function () {
         let { authInfo, qString, gameCode } = getSessionInfo(socket, referer)
 
         console.log(`>> Socket.io:: [${referer}]\n
-            Received 'team-record', game code exists? ${gameCode}`)
+            Received 'team-record', game code exists? ${gameCode}, from user: ${qString.u}, auth info is: `, authInfo)
 
-        if(gameCode && that.persistMsgs[gameCode] && that.persistMsgs[gameCode][qString.u]) {
-          return fn([
+        let gameUsersRecord = that.persistMsgs[gameCode]
+        let me = gameUsersRecord ? gameUsersRecord[qString.u] : 'anonymous'
+        let myTeam = me == 'anonymous' ? '?' : me.main.team
+
+        console.log(gameUsersRecord, me, myTeam)
+        if(gameCode && that.persistMsgs[gameCode] && me != 'anonymous') {
+          //These checks might not be enough for security sake...
+          let teamPlayers = []
+          for(let p in gameUsersRecord) {
+            if(gameUsersRecord[p].main.team == myTeam) {
+              teamPlayers.push({ email: p })
+            }
+          }
+          return fn(teamPlayers)
+          
+          fn([
             {
-              email: "Eusebio"
-            },
-            {
-              email: "Mourinho"
-            },
-            {
-              email: "Hard-coded"
-            },
-            {
-              email: "Change me!"
-            },
+              email: user.value
+            }
           ])
         }
         fn()
@@ -233,10 +262,13 @@ export default function () {
               }
             }
             console.log() //Needed after stdout.write to force a new line
+            //Assumes also the status is online
+            message.online = true
             if(!persistObj[key]) {
               console.log('Will add a new persisted message!')
               //It's a new message
               persistObj[key] = message
+              message.cid = []
             } else {
               //Already exists: Assign to the target the properties of the new message
               console.log('Persisted object already exists... updating')
@@ -244,6 +276,8 @@ export default function () {
               //console.log(message)
               Object.assign(persistObj[key], message)
             }
+            //Adds into the message the client socket id for audit purposes
+            persistObj[key].cid.push(socket.client.id)
           } else {
             //Simple object, assuming it's a string, in practice could be also a bool or a integer, but that would be weird...
             that.persistMsgs[message.persist] = message
@@ -270,11 +304,13 @@ export default function () {
               //Add the actual points to the user records!
               console.log(`will update points for player ${u.from}, current points: ${u.points}`)
               if(!u.points) u.points = 0
+              message.oldValue = u.points
               u.points += message.value
               break;
             case 'game-update-team':
               u = that.persistMsgs[message.sessionId][message.main]
               console.log(`will update team for player ${u.from}, current team: ${u.main.team}`)
+              message.oldValue = u.main.team
               u.main.team = message.value
               break;
             default:  

@@ -22,6 +22,7 @@ For detailed explanation on how Nuxt works, check out [Nuxt.js docs](https://nux
 History:
 ========
 
+- v 0.2.9: Socket.io various improvements main one on detecting if a player lost connection (for future purposes). Minor updates on team services.
 - v 0.2.8: Socket.io added Team-Record service
 - v 0.2.7: Added root index.vue page with games. For now hard-coded (WIP), but intention is to have then listed dinamically. Still some work required on UI
 - v 0.2.6: Integrated with Amazon Cognito - still some cleaning up to do 
