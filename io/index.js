@@ -4,7 +4,9 @@ import cookie from 'cookie'
 import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from 'constants';
 import querystring from 'querystring'
 import util from 'util'
-import ioHooks from './custom.io/xy.io/hooks.js' //Make this dynamic depending on the arg passed or another configuration in nuxt or package.json
+import customIO from './customIO.js'
+//import ioHooks from './custom.io/xy.io/hooks.js' //Make this dynamic depending on the arg passed or another configuration in nuxt or package.json
+var ioHooks //Dynamically loaded
 
 //import { isArguments } from 'cypress/types/lodash';
 
@@ -277,6 +279,7 @@ export default function () {
               Object.assign(persistObj[key], message)
             }
             //Adds into the message the client socket id for audit purposes
+            if(!persistObj[key].cid) persistObj[key].cid = [] 
             persistObj[key].cid.push(socket.client.id)
           } else {
             //Simple object, assuming it's a string, in practice could be also a bool or a integer, but that would be weird...
@@ -313,6 +316,9 @@ export default function () {
               message.oldValue = u.main.team
               u.main.team = message.value
               break;
+            case 'game-update-teammates':
+              console.log(message)
+              break;
             default:  
               that.persistMsgs[message.persist][message.sessionId] = message
               break
@@ -325,6 +331,31 @@ export default function () {
         console.log(`>> Socket.io:: Emited message to all player listeners`)
       })
       
+      socket.on('import-custom-hook', function (fn) {
+        console.log(`>> Socket.io:: Importing custom hook file from ${referer}`)
+        let code
+        if(referer.indexOf('/custom.pages/') > 0) {
+          let code = referer.split('/custom.pages/')[1]
+          code = code.split('.pages/')
+          console.log(`Project code is ${code}`)
+          if(code[0]) {
+            //import ioHooks from `./custom.io/${code}.io/hooks.js`
+            ioHooks = require(`./custom.io/${code[0]}.io/hooks.js`)
+            if(ioHooks.load && typeof ioHooks.load === 'function') {
+              ioHooks.load(socket)
+              console.log(`ioHooks loaded: '${code[0]}'`)
+              fn()
+            } else {
+              console.warn(`custom hook does not have a 'load' function! Ignoring...`)
+            }
+          }
+        } else {
+          console.warn(`import-custom-hook did not find a file to import! Ignoring...`)
+        }
+        console.log(referer)
+      })
+      //customIO jobs
+      customIO(socket)
       //console.log(`>> Socket.io:: Sending last known game-status (${that.persistMsgs["game-status"]})`)
       //socket.broadcast.emit('update-status', that.persistMsgs["game-status"]) // Will always be null?
     })
